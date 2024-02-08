@@ -8,10 +8,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
-
 
 @Entity
 @Getter

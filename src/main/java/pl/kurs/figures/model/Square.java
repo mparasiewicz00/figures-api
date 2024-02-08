@@ -10,9 +10,7 @@ import java.io.Serializable;
 public class Square extends Figure implements Serializable {
 
     private double sideLength;
-    private double area;
 
-    private double perimeter;
 
 
 

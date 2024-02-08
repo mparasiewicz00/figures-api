@@ -11,8 +11,7 @@ public class Rectangle extends Figure implements Serializable {
 
     private double firstSideLength;
     private double secondSideLength;
-    private double area;
-    private double perimeter;
+
 
 
 

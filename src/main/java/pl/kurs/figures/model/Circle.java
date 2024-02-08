@@ -9,8 +9,8 @@ import java.io.Serializable;
 public class Circle extends Figure implements Serializable {
 
     private double radius;
-    private double area;
-    private double perimeter;
+
+
 
 
 
