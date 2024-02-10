@@ -37,4 +37,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1707403054538-4" author="mateuszparasiewicz">
+        <modifyDataType tableName="figure" columnName="version" newDataType="INTEGER"/>
+    </changeSet>
+
+    <changeSet id="1707403054538-5" author="mateuszparasiewicz">
+        <modifyDataType tableName="figure" columnName="version" newDataType="INT"/>
+    </changeSet>
+
 </databaseChangeLog>

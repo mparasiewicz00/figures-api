@@ -10,17 +10,17 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 
 @Entity
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Getter
+@Setter
 @Inheritance(strategy=SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
 public abstract class Figure implements FigureInterface, Serializable {
@@ -38,7 +38,7 @@ public abstract class Figure implements FigureInterface, Serializable {
 
     @Version
     @Column(name = "version", nullable = false)
-    private double version;
+    private Integer version;
 
     @CreatedBy
     @Column(name = "createdBy")
@@ -46,14 +46,39 @@ public abstract class Figure implements FigureInterface, Serializable {
 
     @CreatedDate
     @Column(name = "createdAt")
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @LastModifiedDate
     @Column(name = "lastModifiedAt")
-    private LocalDateTime lastModifiedAt;
+    private LocalDate lastModifiedAt;
 
     @LastModifiedBy
     @Column(name = "lastModifiedBy")
     private String lastModifiedBy;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Figure figure = (Figure) o;
+        return Double.compare(version, figure.version) == 0 && Objects.equals(id, figure.id) && Objects.equals(type, figure.type) && Objects.equals(createdBy, figure.createdBy) && Objects.equals(createdAt, figure.createdAt) && Objects.equals(lastModifiedAt, figure.lastModifiedAt) && Objects.equals(lastModifiedBy, figure.lastModifiedBy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, version, createdBy, createdAt, lastModifiedAt, lastModifiedBy);
+    }
+
+    @Override
+    public String toString() {
+        return "Figure{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", version=" + version +
+                ", createdBy='" + createdBy + '\'' +
+                ", createdAt=" + createdAt +
+                ", lastModifiedAt=" + lastModifiedAt +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                '}';
+    }
 }
