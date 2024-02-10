@@ -15,7 +15,7 @@ import java.io.Serializable;
 @DiscriminatorValue("SQUARE")
 public class Square extends Figure implements Serializable {
 
-    @Column(name = "sideLength", nullable = false)
+    @Column(name = "sideLength")
     private double sideLength;
 
     @Override

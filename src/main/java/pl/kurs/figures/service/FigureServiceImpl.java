@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.model.Figure;
-import pl.kurs.figures.model.FigureFactory;
 import pl.kurs.figures.repository.FigureRepository;
 
 @Service

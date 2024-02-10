@@ -1,6 +1,11 @@
-package pl.kurs.figures.model;
+package pl.kurs.figures.service;
 
 import pl.kurs.figures.exceptions.ShapeNotExistException;
+import pl.kurs.figures.model.Circle;
+import pl.kurs.figures.model.Figure;
+import pl.kurs.figures.model.Rectangle;
+import pl.kurs.figures.model.Square;
+
 public class FigureFactory {
     public static Figure createFigure(String type, double... parameters) {
         return switch (type.toUpperCase()) {

@@ -15,10 +15,10 @@ import java.io.Serializable;
 @DiscriminatorValue("RECTANGLE")
 public class Rectangle extends Figure implements Serializable {
 
-    @Column(name = "firstSideLength", nullable = false)
+    @Column(name = "firstSideLength")
     private double firstSideLength;
 
-    @Column(name = "secondSideLength", nullable = false)
+    @Column(name = "secondSideLength")
     private double secondSideLength;
 
     @Override

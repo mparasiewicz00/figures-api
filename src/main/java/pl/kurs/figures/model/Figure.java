@@ -21,6 +21,8 @@ import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 @Inheritance(strategy=SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
 public abstract class Figure implements FigureInterface, Serializable {
@@ -37,7 +39,7 @@ public abstract class Figure implements FigureInterface, Serializable {
     private String type;
 
     @Version
-    @Column(name = "version", nullable = false)
+    @Column(name = "version")
     private Integer version;
 
     @CreatedBy
@@ -56,29 +58,4 @@ public abstract class Figure implements FigureInterface, Serializable {
     @Column(name = "lastModifiedBy")
     private String lastModifiedBy;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Figure figure = (Figure) o;
-        return Double.compare(version, figure.version) == 0 && Objects.equals(id, figure.id) && Objects.equals(type, figure.type) && Objects.equals(createdBy, figure.createdBy) && Objects.equals(createdAt, figure.createdAt) && Objects.equals(lastModifiedAt, figure.lastModifiedAt) && Objects.equals(lastModifiedBy, figure.lastModifiedBy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, version, createdBy, createdAt, lastModifiedAt, lastModifiedBy);
-    }
-
-    @Override
-    public String toString() {
-        return "Figure{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                ", version=" + version +
-                ", createdBy='" + createdBy + '\'' +
-                ", createdAt=" + createdAt +
-                ", lastModifiedAt=" + lastModifiedAt +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
-                '}';
-    }
 }

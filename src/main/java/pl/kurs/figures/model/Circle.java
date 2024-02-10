@@ -24,7 +24,7 @@ import static java.lang.Math.pow;
 @DiscriminatorValue("CIRCLE")
 public class Circle extends Figure implements Serializable {
 
-    @Column(name = "radius", nullable = false)
+    @Column(name = "radius")
     private double radius;
 
     @Override

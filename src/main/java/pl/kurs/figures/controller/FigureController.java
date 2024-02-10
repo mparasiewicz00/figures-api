@@ -7,8 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kurs.figures.command.CreateFigureCommand;
+import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.service.FigureService;
 
 @RestController
@@ -20,8 +23,8 @@ public class FigureController {
     @Operation(summary = "Add new figure")
     @ApiResponse(responseCode = "201", description = "Figure created successfully")
     @ApiResponse(responseCode = "500", description = "There is a problem during figure creation")
-    public ResponseEntity<Void> addFigure() {
-
+    public ResponseEntity<Void> addFigure(@RequestBody CreateFigureCommand command) {
+        figureService.createFigure(command.getType(), command.getParameters());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
