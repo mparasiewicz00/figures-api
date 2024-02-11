@@ -19,7 +19,7 @@ import pl.kurs.figures.service.FigureService;
 @AllArgsConstructor
 public class FigureController {
     private FigureService figureService;
-    @PostMapping("/add")
+    @PostMapping()
     @Operation(summary = "Add new figure")
     @ApiResponse(responseCode = "201", description = "Figure created successfully")
     @ApiResponse(responseCode = "500", description = "There is a problem during figure creation")

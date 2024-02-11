@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,6 +26,7 @@ import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 @ToString
 @Inheritance(strategy=SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "type")
+@EntityListeners(AuditingEntityListener.class)
 public abstract class Figure implements FigureInterface, Serializable {
 
     @Serial
