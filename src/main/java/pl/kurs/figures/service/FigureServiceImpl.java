@@ -33,8 +33,11 @@ public class FigureServiceImpl implements FigureService {
         return modelMapper.map(savedShape, FigureDTO.class);
     }
 
+
+    //Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct
     @Override
     public boolean isValidParameters(String type, double[] parameters) {
+        //Primitive elements of array can't be null, then we only have to check if any of elements equals 0.0
         boolean zeroOrNullParameter = Arrays.stream(parameters)
                 .anyMatch(p1 -> p1 == 0);
 
