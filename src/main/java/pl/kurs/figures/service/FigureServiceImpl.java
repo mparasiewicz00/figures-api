@@ -11,6 +11,7 @@ import pl.kurs.figures.model.Figure;
 import pl.kurs.figures.repository.FigureRepository;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,7 @@ public class FigureServiceImpl implements FigureService {
 
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
-        double [] parameters = Optional.ofNullable(command.getParameters())
+        List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .filter(p -> isValidParameters(command.getType(), p))
                 .orElseThrow(() -> new InvalidFigureParametersException("Invalid parameters passed"));
 
@@ -36,18 +37,18 @@ public class FigureServiceImpl implements FigureService {
 
     //Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct
     @Override
-    public boolean isValidParameters(String type, double[] parameters) {
-        //Primitive elements of array can't be null, then we only have to check if any of elements equals 0.0
-        boolean zeroOrNullParameter = Arrays.stream(parameters)
-                .anyMatch(p1 -> p1 == 0);
+    public boolean isValidParameters(String type, List<Double> parameters) {
+
+        boolean zeroOrNullParameter = parameters.stream()
+                .anyMatch(parameter -> parameter == null || parameter == 0.0);
 
         if (zeroOrNullParameter) {
             throw new InvalidFigureParametersException("Invalid parameters passed");
         }
 
         return switch (type.toUpperCase()) {
-            case "RECTANGLE" -> parameters.length == 2;
-            case "SQUARE", "CIRCLE" -> parameters.length == 1;
+            case "RECTANGLE" -> parameters.size() == 2;
+            case "SQUARE", "CIRCLE" -> parameters.size() == 1;
             default -> false;
         };
     }

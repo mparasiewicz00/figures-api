@@ -6,8 +6,10 @@ import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.model.Figure;
 
+import java.util.List;
+
 @Service
 public interface FigureService {
     FigureDTO createFigure(CreateFigureCommand command);
-    boolean isValidParameters(String type, double[] parameters);
+    boolean isValidParameters(String type, List<Double> parameters);
 }
