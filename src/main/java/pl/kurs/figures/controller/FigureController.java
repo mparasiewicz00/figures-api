@@ -24,7 +24,7 @@ public class FigureController {
     @ApiResponse(responseCode = "201", description = "Figure created successfully")
     @ApiResponse(responseCode = "500", description = "There is a problem during figure creation")
     public ResponseEntity<Void> addFigure(@RequestBody CreateFigureCommand command) {
-        figureService.createFigure(command.getType(), command.getParameters());
+        figureService.createFigure(command);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
