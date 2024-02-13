@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(ShapeNotExistException.class)
+    @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ExceptionResponseDTO> handleUsernameNotFoundException(UsernameNotFoundException e) {
         ExceptionResponseDTO response = new ExceptionResponseDTO(
                 List.of(e.getMessage()),

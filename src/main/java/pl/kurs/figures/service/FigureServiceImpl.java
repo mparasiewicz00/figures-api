@@ -31,12 +31,10 @@ public class FigureServiceImpl implements FigureService {
         Figure figure = FigureFactory.createFigure(command.getType(), parameters);
         Figure savedShape = figureRepository.save(figure);
 
-        double area = savedShape.calculateArea();
-        double perimeter = savedShape.calculatePerimeter();
-
         FigureDTO figureDTO = modelMapper.map(savedShape, FigureDTO.class);
-        figureDTO.setArea(area);
-        figureDTO.setPerimeter(perimeter);
+
+        figureDTO.setArea(savedShape.calculateArea());
+        figureDTO.setPerimeter(savedShape.calculatePerimeter());
 
         return  figureDTO;
     }
