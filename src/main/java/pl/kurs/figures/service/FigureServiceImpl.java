@@ -25,13 +25,20 @@ public class FigureServiceImpl implements FigureService {
     public FigureDTO createFigure(CreateFigureCommand command) {
         List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .filter(p -> isValidParameters(command.getType(), p))
-                .orElseThrow(() -> new InvalidFigureParametersException("Invalid parameters passed"));
+                .orElseThrow(() -> new InvalidFigureParametersException("Invalid number of parameters"));
+
 
         Figure figure = FigureFactory.createFigure(command.getType(), parameters);
-
         Figure savedShape = figureRepository.save(figure);
 
-        return modelMapper.map(savedShape, FigureDTO.class);
+        double area = savedShape.calculateArea();
+        double perimeter = savedShape.calculatePerimeter();
+
+        FigureDTO figureDTO = modelMapper.map(savedShape, FigureDTO.class);
+        figureDTO.setArea(area);
+        figureDTO.setPerimeter(perimeter);
+
+        return  figureDTO;
     }
 
 

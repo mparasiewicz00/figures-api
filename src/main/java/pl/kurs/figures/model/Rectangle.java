@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Entity
@@ -28,5 +29,28 @@ public class Rectangle extends Figure implements Serializable {
     @Override
     public double calculatePerimeter() {
         return firstSideLength * 2 + secondSideLength * 2;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Rectangle rectangle = (Rectangle) o;
+        return Double.compare(firstSideLength, rectangle.firstSideLength) == 0 && Double.compare(secondSideLength, rectangle.secondSideLength) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), firstSideLength, secondSideLength);
+    }
+
+    @Override
+    public String toString() {
+        return "Rectangle{" +
+                "firstSideLength=" + firstSideLength +
+                ", secondSideLength=" + secondSideLength +
+                '}';
     }
 }
