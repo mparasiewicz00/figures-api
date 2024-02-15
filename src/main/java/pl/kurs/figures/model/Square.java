@@ -4,17 +4,23 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorValue("SQUARE")
 public class Square extends Figure implements Serializable {
+
+    private final String type = "SQUARE";
 
     @Column(name = "sideLength")
     private double sideLength;

@@ -5,12 +5,17 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
+import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
+import pl.kurs.figures.dto.RectangleDTO;
+import pl.kurs.figures.dto.SquareDTO;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
+import pl.kurs.figures.model.Circle;
 import pl.kurs.figures.model.Figure;
+import pl.kurs.figures.model.Rectangle;
+import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,23 +25,16 @@ public class FigureServiceImpl implements FigureService {
 
     private final FigureRepository figureRepository;
     private final ModelMapper modelMapper;
-
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
         List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .filter(p -> isValidParameters(command.getType(), p))
                 .orElseThrow(() -> new InvalidFigureParametersException("Invalid number of parameters"));
 
-
         Figure figure = FigureFactory.createFigure(command.getType(), parameters);
-        Figure savedShape = figureRepository.save(figure);
+        figureRepository.save(figure);
 
-        FigureDTO figureDTO = modelMapper.map(savedShape, FigureDTO.class);
-
-        figureDTO.setArea(savedShape.calculateArea());
-        figureDTO.setPerimeter(savedShape.calculatePerimeter());
-
-        return  figureDTO;
+        return mapToDTO(figure);
     }
 
 
@@ -58,5 +56,40 @@ public class FigureServiceImpl implements FigureService {
         };
     }
 
+    private FigureDTO mapToDTO(Figure figure) {
+        return switch (figure.getType().toUpperCase()) {
+            case "CIRCLE" -> mapToCircleDTO((Circle) figure);
+            case "SQUARE" -> mapToSquareDTO((Square) figure);
+            case "RECTANGLE" -> mapToRectangleDTO((Rectangle) figure);
+            default -> throw new InvalidFigureParametersException("Unsupported figure type: " + figure.getType());
+        };
+    }
+
+    private CircleDTO mapToCircleDTO(Circle circle) {
+        CircleDTO dto = modelMapper.map(circle, CircleDTO.class);
+        dto.setRadius(circle.getRadius());
+        dto.setArea(circle.calculateArea());
+        dto.setPerimeter(circle.calculatePerimeter());
+        return dto;
+    }
+
+    private RectangleDTO mapToRectangleDTO(Rectangle rectangle) {
+        RectangleDTO dto = modelMapper.map(rectangle, RectangleDTO.class);
+        dto.setFirst_side_length(rectangle.getFirstSideLength());
+        dto.setSecond_side_length(rectangle.getSecondSideLength());
+        dto.setArea(rectangle.calculateArea());
+        dto.setPerimeter(rectangle.calculatePerimeter());
+        return dto;
+    }
+
+    private SquareDTO mapToSquareDTO(Square square) {
+        SquareDTO dto = modelMapper.map(square, SquareDTO.class);
+        dto.setSide_length(square.getSideLength());
+        dto.setArea(square.calculateArea());
+        dto.setPerimeter(square.calculatePerimeter());
+        return dto;
+    }
+
 
 }
+
