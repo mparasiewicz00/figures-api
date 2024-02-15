@@ -27,6 +27,12 @@ public class FigureServiceImpl implements FigureService {
     private final ModelMapper modelMapper;
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
+        switch (command.getType().toUpperCase()) {
+            case "RECTANGLE", "SQUARE", "CIRCLE":
+                break;
+            default:
+                throw new InvalidFigureParametersException("Unsupported figure type");
+        }
         List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .filter(p -> isValidParameters(command.getType(), p))
                 .orElseThrow(() -> new InvalidFigureParametersException("Invalid number of parameters"));
@@ -37,13 +43,12 @@ public class FigureServiceImpl implements FigureService {
         return mapToDTO(figure);
     }
 
-
     //Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct
     @Override
     public boolean isValidParameters(String type, List<Double> parameters) {
 
         boolean zeroOrNullParameter = parameters.stream()
-                .anyMatch(parameter -> parameter == null || parameter == 0.0);
+                .anyMatch(parameter -> parameter == null || parameter <= 0.0);
 
         if (zeroOrNullParameter) {
             throw new InvalidFigureParametersException("Invalid parameters passed");
