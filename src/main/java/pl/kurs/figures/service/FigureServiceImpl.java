@@ -25,14 +25,13 @@ public class FigureServiceImpl implements FigureService {
 
     private final FigureRepository figureRepository;
     private final ModelMapper modelMapper;
+
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
-        switch (command.getType().toUpperCase()) {
-            case "RECTANGLE", "SQUARE", "CIRCLE":
-                break;
-            default:
-                throw new InvalidFigureParametersException("Unsupported figure type");
+        if (!isValidType(command.getType())) {
+            throw new InvalidFigureParametersException("Unsupported figure type: " + command.getType());
         }
+
         List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .filter(p -> isValidParameters(command.getType(), p))
                 .orElseThrow(() -> new InvalidFigureParametersException("Invalid number of parameters"));
@@ -43,10 +42,15 @@ public class FigureServiceImpl implements FigureService {
         return mapToDTO(figure);
     }
 
-    //Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct
+    /* Checking if user pass correct type of figure */
+    @Override
+    public boolean isValidType(String type) {
+        return List.of("RECTANGLE", "SQUARE", "CIRCLE").contains(type.toUpperCase());
+    }
+
+    /* Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct */
     @Override
     public boolean isValidParameters(String type, List<Double> parameters) {
-
         boolean zeroOrNullParameter = parameters.stream()
                 .anyMatch(parameter -> parameter == null || parameter <= 0.0);
 
@@ -57,7 +61,7 @@ public class FigureServiceImpl implements FigureService {
         return switch (type.toUpperCase()) {
             case "RECTANGLE" -> parameters.size() == 2;
             case "SQUARE", "CIRCLE" -> parameters.size() == 1;
-            default -> false;
+            default -> false; //
         };
     }
 

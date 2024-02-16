@@ -6,12 +6,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.dto.FigureDTO;
+import pl.kurs.figures.security.model.Role;
 import pl.kurs.figures.service.FigureService;
 
 @RestController
@@ -24,7 +27,7 @@ public class FigureController {
     @ApiResponse(responseCode = "201", description = "Figure created successfully")
     @ApiResponse(responseCode = "500", description = "There is a problem during figure creation")
     public ResponseEntity<FigureDTO> addFigure(@RequestBody CreateFigureCommand command) {
-        FigureDTO createdFigureDTO = figureService.createFigure(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdFigureDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(figureService.createFigure(command));
     }
 }

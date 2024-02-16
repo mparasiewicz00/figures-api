@@ -11,5 +11,6 @@ import java.util.List;
 public interface FigureService {
     FigureDTO createFigure(CreateFigureCommand command);
     boolean isValidParameters(String type, List<Double> parameters);
+    boolean isValidType(String type);
 
 }
