@@ -3,6 +3,7 @@ package pl.kurs.figures.service;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.dto.CircleDTO;
@@ -15,6 +16,7 @@ import pl.kurs.figures.model.Figure;
 import pl.kurs.figures.model.Rectangle;
 import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
+import pl.kurs.figures.service.FigureFactory;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -26,6 +28,7 @@ public class FigureServiceImpl implements FigureService {
 
     private final FigureRepository figureRepository;
     private final ModelMapper modelMapper;
+    private final FigureFactory figureFactory;
 
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
@@ -49,7 +52,7 @@ public class FigureServiceImpl implements FigureService {
             throw new InvalidFigureParametersException("Invalid number of parameters for type: " + type);
         }
 
-        Figure figure = FigureFactory.createFigure(type, parameters);
+        Figure figure = figureFactory.createFigure(type, parameters);
         figureRepository.save(figure);
 
         return mapToDTO(figure);

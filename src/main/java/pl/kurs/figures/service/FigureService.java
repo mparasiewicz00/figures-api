@@ -1,5 +1,6 @@
 package pl.kurs.figures.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.dto.FigureDTO;
