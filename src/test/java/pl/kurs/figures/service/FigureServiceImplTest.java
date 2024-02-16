@@ -50,9 +50,12 @@ class FigureServiceImplTest {
 
         FigureDTO resultDTO = figureService.createFigure(command);
 
-        assertNotNull(resultDTO);
-        assertEquals(Math.PI * 25, resultDTO.getArea());
-        assertEquals(2 * Math.PI * 5, resultDTO.getPerimeter());
+        assertAll(
+                () -> verify(figureFactory, atLeastOnce()).createFigure(command.getType(), command.getParameters()),
+                () -> assertNotNull(resultDTO),
+                () -> assertEquals(Math.PI * 25, resultDTO.getArea()),
+                () -> assertEquals(2 * Math.PI * 5, resultDTO.getPerimeter())
+        );
     }
 
     @Test
