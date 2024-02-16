@@ -16,6 +16,7 @@ import pl.kurs.figures.model.Rectangle;
 import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,41 +29,49 @@ public class FigureServiceImpl implements FigureService {
 
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
-        if (!isValidType(command.getType())) {
-            throw new InvalidFigureParametersException("Unsupported figure type: " + command.getType());
-        }
+
+        String type = String.valueOf(Optional.ofNullable(command.getType())
+                .orElseThrow(() -> new InvalidFigureParametersException("Type cannot be null")));
 
         List<Double> parameters = Optional.ofNullable(command.getParameters())
-                .filter(p -> isValidParameters(command.getType(), p))
-                .orElseThrow(() -> new InvalidFigureParametersException("Invalid number of parameters"));
+                .orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
 
-        Figure figure = FigureFactory.createFigure(command.getType(), parameters);
+
+        if (!isValidType(type)) {
+            throw new InvalidFigureParametersException("Unsupported figure type: " + type);
+        }
+
+        if (!areParametersValid(parameters)) {
+            throw new InvalidFigureParametersException("Parameters must be greater than 0");
+        }
+
+        if (!areParametersCountValid(type, parameters)) {
+            throw new InvalidFigureParametersException("Invalid number of parameters for type: " + type);
+        }
+
+        Figure figure = FigureFactory.createFigure(type, parameters);
         figureRepository.save(figure);
 
         return mapToDTO(figure);
     }
 
-    /* Checking if user pass correct type of figure */
     @Override
-    public boolean isValidType(String type) {
-        return List.of("RECTANGLE", "SQUARE", "CIRCLE").contains(type.toUpperCase());
+    public boolean areParametersValid(List<Double> parameters) {
+        return parameters.stream().noneMatch(parameter -> parameter == null || parameter <= 0.0);
     }
 
-    /* Checking if parameters passed are not null or equals 0.0 and checking if number of parameters to passed shape is correct */
     @Override
-    public boolean isValidParameters(String type, List<Double> parameters) {
-        boolean zeroOrNullParameter = parameters.stream()
-                .anyMatch(parameter -> parameter == null || parameter <= 0.0);
-
-        if (zeroOrNullParameter) {
-            throw new InvalidFigureParametersException("Invalid parameters passed");
-        }
-
+    public boolean areParametersCountValid(String type, List<Double> parameters) {
         return switch (type.toUpperCase()) {
             case "RECTANGLE" -> parameters.size() == 2;
             case "SQUARE", "CIRCLE" -> parameters.size() == 1;
-            default -> false; //
+            default -> false;
         };
+    }
+
+    @Override
+    public boolean isValidType(String type) {
+        return List.of("RECTANGLE", "SQUARE", "CIRCLE").contains(type.toUpperCase());
     }
 
     private FigureDTO mapToDTO(Figure figure) {
@@ -70,9 +79,10 @@ public class FigureServiceImpl implements FigureService {
             case "CIRCLE" -> mapToCircleDTO((Circle) figure);
             case "SQUARE" -> mapToSquareDTO((Square) figure);
             case "RECTANGLE" -> mapToRectangleDTO((Rectangle) figure);
-            default -> throw new InvalidFigureParametersException("Unsupported figure type: " + figure.getType());
+            default -> throw new AssertionError("Unsupported figure type: " + figure.getType());
         };
     }
+
 
     private CircleDTO mapToCircleDTO(Circle circle) {
         CircleDTO dto = modelMapper.map(circle, CircleDTO.class);

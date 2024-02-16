@@ -10,7 +10,10 @@ import java.util.List;
 @Service
 public interface FigureService {
     FigureDTO createFigure(CreateFigureCommand command);
-    boolean isValidParameters(String type, List<Double> parameters);
-    boolean isValidType(String type);
 
+    boolean areParametersValid(List<Double> parameters);
+
+    boolean areParametersCountValid(String type, List<Double> parameters);
+
+    boolean isValidType(String type);
 }
