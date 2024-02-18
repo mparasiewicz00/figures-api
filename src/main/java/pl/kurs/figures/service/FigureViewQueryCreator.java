@@ -3,7 +3,7 @@ package pl.kurs.figures.service;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import pl.kurs.figures.command.FigureSearchCriteria;
-import pl.kurs.figures.view.QFigureView;
+import pl.kurs.figures.model.QFigureView;
 
 public class FigureViewQueryCreator {
 

@@ -1,21 +1,17 @@
 package pl.kurs.figures.controller;
 
 
-import com.querydsl.core.types.Predicate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
 import pl.kurs.figures.dto.FigureDTO;
-import pl.kurs.figures.repository.FigureViewRepository;
 import pl.kurs.figures.service.FigureService;
-import pl.kurs.figures.service.FigureViewQueryCreator;
-import pl.kurs.figures.view.FigureView;
+import pl.kurs.figures.model.FigureView;
 
 import java.util.List;
 

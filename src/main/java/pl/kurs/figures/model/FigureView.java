@@ -1,4 +1,4 @@
-package pl.kurs.figures.view;
+package pl.kurs.figures.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

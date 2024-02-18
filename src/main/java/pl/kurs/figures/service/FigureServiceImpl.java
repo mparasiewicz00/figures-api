@@ -19,7 +19,7 @@ import pl.kurs.figures.model.Rectangle;
 import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
-import pl.kurs.figures.view.FigureView;
+import pl.kurs.figures.model.FigureView;
 
 import java.util.List;
 import java.util.Optional;
