@@ -1,11 +1,13 @@
 package pl.kurs.figures.service;
 
 
+import com.querydsl.core.types.Predicate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
+import pl.kurs.figures.command.FigureSearchCriteria;
 import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.dto.RectangleDTO;
@@ -16,9 +18,9 @@ import pl.kurs.figures.model.Figure;
 import pl.kurs.figures.model.Rectangle;
 import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
-import pl.kurs.figures.service.FigureFactory;
+import pl.kurs.figures.repository.FigureViewRepository;
+import pl.kurs.figures.view.FigureView;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ public class FigureServiceImpl implements FigureService {
     private final FigureRepository figureRepository;
     private final ModelMapper modelMapper;
     private final FigureFactory figureFactory;
+    private final FigureViewRepository figureViewRepository;
 
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
@@ -57,6 +60,14 @@ public class FigureServiceImpl implements FigureService {
 
         return mapToDTO(figure);
     }
+
+    @Override
+    public List<FigureView> searchFigures(FigureSearchCriteria criteria) {
+        Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
+        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
+        return (List<FigureView>) figureViewRepository.findAll(predicate, sort);
+    }
+
 
     @Override
     public boolean areParametersValid(List<Double> parameters) {
@@ -111,6 +122,9 @@ public class FigureServiceImpl implements FigureService {
         dto.setPerimeter(square.calculatePerimeter());
         return dto;
     }
+
+
+
 
 
 }

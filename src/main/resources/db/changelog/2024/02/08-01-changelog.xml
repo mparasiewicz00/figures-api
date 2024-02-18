@@ -66,4 +66,63 @@
     <changeSet id="1707403054538-7" author="mateuszparasiewicz">
         <renameTable oldTableName="user" newTableName="users"></renameTable>
     </changeSet>
+
+    <changeSet id="1707403054538-8" author="mateuszparasiewicz">
+        <sql>
+            CREATE OR REPLACE VIEW figure_view AS
+            SELECT
+                id,
+                type,
+                created_by,
+                created_at,
+                last_modified_at,
+                last_modified_by,
+                CASE
+                    WHEN type = 'CIRCLE' THEN PI() * radius * radius
+                    WHEN type = 'SQUARE' THEN side_length * side_length
+                    WHEN type = 'RECTANGLE' THEN first_side_length * second_side_length
+                    ELSE 0
+                    END AS area,
+                CASE
+                    WHEN type = 'CIRCLE' THEN 2 * PI() * radius
+                    WHEN type = 'SQUARE' THEN 4 * side_length
+                    WHEN type = 'RECTANGLE' THEN 2 * (first_side_length + second_side_length)
+                    ELSE 0
+                    END AS perimeter
+            FROM
+                figure;
+        </sql>
+    </changeSet>
+
+    <changeSet id="1707403054538-9" author="mateuszparasiewicz">
+        <sql>
+            CREATE OR REPLACE VIEW figure_view AS
+            SELECT
+                id,
+                type,
+                created_by,
+                created_at,
+                last_modified_at,
+                last_modified_by,
+                CASE
+                    WHEN type = 'CIRCLE' THEN PI() * radius * radius
+                    WHEN type = 'SQUARE' THEN side_length * side_length
+                    WHEN type = 'RECTANGLE' THEN first_side_length * second_side_length
+                    ELSE 0
+                    END AS area,
+                CASE
+                    WHEN type = 'CIRCLE' THEN 2 * PI() * radius
+                    WHEN type = 'SQUARE' THEN 4 * side_length
+                    WHEN type = 'RECTANGLE' THEN 2 * (first_side_length + second_side_length)
+                    ELSE 0
+                    END AS perimeter,
+                radius,
+                side_length,
+                first_side_length,
+                second_side_length
+            FROM
+                figure;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
