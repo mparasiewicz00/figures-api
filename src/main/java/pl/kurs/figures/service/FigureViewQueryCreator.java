@@ -23,7 +23,6 @@ public class FigureViewQueryCreator {
         if (criteria.getPerimeterFrom() != null && criteria.getPerimeterTo() != null) {
             builder.and(qFigureView.perimeter.between(criteria.getPerimeterFrom(), criteria.getPerimeterTo()));
         }
-
         if (criteria.getSideLengthFrom() != null && criteria.getSideLengthTo() != null) {
             builder.and(qFigureView.sideLength.between(criteria.getSideLengthFrom(), criteria.getSideLengthTo()));
         }
