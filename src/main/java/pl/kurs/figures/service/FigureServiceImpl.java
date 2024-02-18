@@ -4,7 +4,8 @@ package pl.kurs.figures.service;
 import com.querydsl.core.types.Predicate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
@@ -62,10 +63,9 @@ public class FigureServiceImpl implements FigureService {
     }
 
     @Override
-    public List<FigureView> searchFigures(FigureSearchCriteria criteria) {
+    public Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable) {
         Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
-        Sort sort = Sort.by(Sort.Direction.ASC, "createdAt");
-        return (List<FigureView>) figureViewRepository.findAll(predicate, sort);
+        return figureViewRepository.findAll(predicate, pageable);
     }
 
 

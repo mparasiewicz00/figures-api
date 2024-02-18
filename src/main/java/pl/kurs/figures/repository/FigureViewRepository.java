@@ -2,6 +2,7 @@ package pl.kurs.figures.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import pl.kurs.figures.model.FigureView;
 
 public interface FigureViewRepository extends JpaRepository<FigureView, Long>, QuerydslPredicateExecutor<FigureView> {

@@ -1,5 +1,7 @@
 package pl.kurs.figures.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
@@ -13,7 +15,7 @@ import java.util.List;
 public interface FigureService {
     FigureDTO createFigure(CreateFigureCommand command);
 
-    List<FigureView> searchFigures(FigureSearchCriteria criteria);
+    Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable);
 
     boolean areParametersValid(List<Double> parameters);
 
