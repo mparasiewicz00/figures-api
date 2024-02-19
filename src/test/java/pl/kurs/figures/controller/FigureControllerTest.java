@@ -132,7 +132,5 @@ class FigureControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.[0].id").value(1));
-
-
     }
 }
