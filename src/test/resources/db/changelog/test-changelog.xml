@@ -30,6 +30,23 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="12938912381293123-3" author="mateuszparasiewicz">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="username" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
     <changeSet id="12938912381293123-2" author="mateuszparasiewicz" runOnChange="true">
         <createView encoding="UTF-8"
                     fullDefinition="false"
@@ -60,7 +77,7 @@
                      WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
                      ELSE 0
                     END) AS perimeter
-            from figure f;
+            from figure f
         </createView>
     </changeSet>
 </databaseChangeLog>
