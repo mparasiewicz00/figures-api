@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
+@Sql(scripts={"classpath:initial.sql"})
 class FigureControllerTest {
 
     private MockMvc postman;
@@ -123,7 +124,6 @@ class FigureControllerTest {
     }
 
     @Test
-    @Sql(scripts={"classpath:initial.sql"})
     void shouldFindFiguresCreatedByUser() throws Exception {
 
 
