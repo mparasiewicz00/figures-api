@@ -1,8 +1,6 @@
 package pl.kurs.figures.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,29 +10,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import pl.kurs.figures.FiguresApiApplication;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.model.Figure;
-import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
-import pl.kurs.figures.repository.FigureViewRepository;
 import pl.kurs.figures.security.model.Role;
 import pl.kurs.figures.security.model.User;
 import pl.kurs.figures.security.repository.UserRepository;
 import pl.kurs.figures.service.FigureFactory;
 
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.data.jpa.domain.AbstractAuditable_.createdBy;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,6 +36,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase
+@ActiveProfiles("test")
+@Sql(scripts={"classpath:initial.sql"})
 class FigureControllerTest {
 
     private MockMvc postman;
@@ -60,7 +54,7 @@ class FigureControllerTest {
     private FigureFactory factory;
     private User user;
 
-//    @Before
+    //    @Before
 //    public void init() {
 //        testFigure = new Square();
 //        testFigure.setType("SQUARE");
@@ -70,8 +64,10 @@ class FigureControllerTest {
 //    }
     @BeforeEach
     public void setup() {
-        this.postman = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         user = setupUser();
+        this.postman = MockMvcBuilders
+                .webAppContextSetup(this.webApplicationContext)
+                .build();
     }
 
 
@@ -129,19 +125,12 @@ class FigureControllerTest {
 
     @Test
     void shouldFindFiguresCreatedByUser() throws Exception {
-        Figure f1 = factory.createFigure("CIRCLE", List.of(10.0));
-        Figure f2 = factory.createFigure("CIRCLE", List.of(12.0));
-        Figure f3 = factory.createFigure("CIRCLE", List.of(13.0));
-        Figure f4 = factory.createFigure("CIRCLE", List.of(14.0));
-        f1.setCreatedBy("user");
-        repository.saveAllAndFlush(Arrays.asList(f1, f2, f3, f4));
-
         this.postman.perform(get("/api/v1/shapes")
                         .with(user(user))
 //                        .param("createdBy","user")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
-
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.[0].id").value(1));
     }
 }
