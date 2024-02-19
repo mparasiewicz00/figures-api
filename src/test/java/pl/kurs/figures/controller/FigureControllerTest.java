@@ -21,7 +21,6 @@ import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.security.model.Role;
 import pl.kurs.figures.security.model.User;
 import pl.kurs.figures.security.repository.UserRepository;
-import pl.kurs.figures.service.FigureFactory;
 
 import java.util.List;
 
