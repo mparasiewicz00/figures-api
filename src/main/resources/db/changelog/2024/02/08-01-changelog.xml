@@ -94,35 +94,38 @@
         </sql>
     </changeSet>
 
-    <changeSet id="1707403054538-9" author="mateuszparasiewicz">
-        <sql>
-            CREATE OR REPLACE VIEW figure_view AS
-            SELECT
-                id,
-                type,
-                created_by,
-                created_at,
-                last_modified_at,
-                last_modified_by,
-                CASE
-                    WHEN type = 'CIRCLE' THEN PI() * radius * radius
-                    WHEN type = 'SQUARE' THEN side_length * side_length
-                    WHEN type = 'RECTANGLE' THEN first_side_length * second_side_length
-                    ELSE 0
-                    END AS area,
-                CASE
-                    WHEN type = 'CIRCLE' THEN 2 * PI() * radius
-                    WHEN type = 'SQUARE' THEN 4 * side_length
-                    WHEN type = 'RECTANGLE' THEN 2 * (first_side_length + second_side_length)
-                    ELSE 0
-                    END AS perimeter,
-                radius,
-                side_length,
-                first_side_length,
-                second_side_length
-            FROM
-                figure;
-        </sql>
+    <changeSet id="1707403054539-2" author="mateuszparasiewicz">
+    <createView encoding="UTF-8"
+                fullDefinition="false"
+                remarks="A String"
+                replaceIfExists="true"
+                schemaName="figures"
+                viewName="figure_view">
+        SELECT
+        f.id as id,
+        f.type as type,
+        f.created_by as created_by,
+        f.created_at as created_at,
+        f.last_modified_at as last_modified_at,
+        f.last_modified_by as last_modified_by,
+        f.radius as radius,
+        f.side_length as side_length,
+        f.first_side_length as first_side_length,
+        f.second_side_length as second_side_length,
+        (CASE
+        WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
+        WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
+        WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
+        ELSE 0
+        END) AS area,
+        (CASE
+        WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
+        WHEN f.type = 'SQUARE' THEN 4 * f.side_length
+        WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
+        ELSE 0
+        END) AS perimeter
+        from figure f;
+    </createView>
     </changeSet>
 
 </databaseChangeLog>

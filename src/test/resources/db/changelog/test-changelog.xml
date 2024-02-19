@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1707403054538-3" author="mateuszparasiewicz (generated)">
+    <changeSet id="12938912381293123-1" author="mateuszparasiewicz (generated)">
         <createTable tableName="figure">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure"/>
@@ -29,5 +29,38 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="12938912381293123-2" author="mateuszparasiewicz" runOnChange="true">
+        <createView encoding="UTF-8"
+                    fullDefinition="false"
+                    remarks="A String"
+                    replaceIfExists="true"
+                    schemaName="PUBLIC"
+                    viewName="figure_view">
+            SELECT
+                f.id as id,
+                f.type as type,
+                f.created_by as created_by,
+                f.created_at as created_at,
+                f.last_modified_at as last_modified_at,
+                f.last_modified_by as last_modified_by,
+                f.radius as radius,
+                f.side_length as side_length,
+                f.first_side_length as first_side_length,
+                f.second_side_length as second_side_length,
+                (CASE
+                     WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
+                     WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
+                     WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
+                     ELSE 0
+                    END) AS area,
+                (CASE
+                     WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
+                     WHEN f.type = 'SQUARE' THEN 4 * f.side_length
+                     WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
+                     ELSE 0
+                    END) AS perimeter
+            from figure f;
+        </createView>
     </changeSet>
 </databaseChangeLog>

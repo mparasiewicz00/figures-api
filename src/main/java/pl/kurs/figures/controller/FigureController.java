@@ -38,7 +38,7 @@ public class FigureController {
     public ResponseEntity<Page<FigureView>> searchFigures(FigureSearchCriteria criteria,
                                                           @RequestParam(value = "page", defaultValue = "0") int page,
                                                           @RequestParam(value = "size", defaultValue = "10") int size) {
-        Page<FigureView> figureViews = figureService.searchFigures(criteria, PageRequest.of(page, size));
-        return ResponseEntity.ok(figureViews);
+        return ResponseEntity.ok(
+                figureService.searchFigures(criteria, PageRequest.of(page, size)));
     }
 }
