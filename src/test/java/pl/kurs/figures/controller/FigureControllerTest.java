@@ -127,11 +127,17 @@ class FigureControllerTest {
     void shouldFindFiguresCreatedByUser() throws Exception {
         this.postman.perform(get("/api/v1/shapes")
                         .with(user(user))
-//                        .param("createdBy","user")
+                        .param("createdBy","user")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.[0].id").value(1))
-                .andExpect(jsonPath("$.content.[1].id").value(2));
+                .andExpect(jsonPath("$.content.[0].createdBy").value("user"))
+                .andExpect(jsonPath("$.content.[0].type").value("CIRCLE"))
+                .andExpect(jsonPath("$.content.[1].id").value(2))
+                .andExpect(jsonPath("$.content.[1].createdBy").value("user"))
+                .andExpect(jsonPath("$.content.[1].type").value("SQUARE"))
+                .andExpect(jsonPath("$.content.length()").value(10))
+        ;
     }
 }
