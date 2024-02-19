@@ -125,7 +125,6 @@ class FigureControllerTest {
                 .andExpect(jsonPath("$.content.[1].id").value(2))
                 .andExpect(jsonPath("$.content.[1].createdBy").value("user"))
                 .andExpect(jsonPath("$.content.[1].type").value("SQUARE"))
-                .andExpect(jsonPath("$.content.length()").value(10))
-        ;
+                .andExpect(jsonPath("$.content.length()").value(10));
     }
 }
