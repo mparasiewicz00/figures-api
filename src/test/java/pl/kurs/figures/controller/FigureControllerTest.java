@@ -50,15 +50,6 @@ class FigureControllerTest {
     @Autowired
     private UserRepository userRepository;
     private User user;
-
-    //    @Before
-//    public void init() {
-//        testFigure = new Square();
-//        testFigure.setType("SQUARE");
-//        testFigure.setId(1L);
-//        testFigure.setCreatedBy("user");
-//        repository.save(testFigure);
-//    }
     @BeforeEach
     public void setup() {
         user = setupUser();
