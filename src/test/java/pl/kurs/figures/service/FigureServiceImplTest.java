@@ -1,5 +1,6 @@
 package pl.kurs.figures.service;
 
+import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -8,17 +9,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import pl.kurs.figures.command.CreateFigureCommand;
+import pl.kurs.figures.command.FigureSearchCriteria;
 import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.dto.SquareDTO;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
 import pl.kurs.figures.model.Circle;
 import pl.kurs.figures.model.Figure;
+import pl.kurs.figures.model.FigureView;
 import pl.kurs.figures.repository.FigureRepository;
+import pl.kurs.figures.repository.FigureViewRepository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +48,9 @@ class FigureServiceImplTest {
 
     @InjectMocks
     private FigureServiceImpl figureService;
+
+    @Mock
+    private FigureViewRepository figureViewRepository;
 
     // createFigure()
     @Test
@@ -78,6 +93,27 @@ class FigureServiceImplTest {
         });
 
         assertEquals("Parameters cannot be null", exception.getMessage());
+    }
+
+
+    //searchFigures
+    @Test
+    void shouldSearchFiguresBasedOnCriteria() {
+        FigureSearchCriteria criteria = new FigureSearchCriteria();
+        criteria.setCreatedBy("user");
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<FigureView> figureViews = new ArrayList<>();
+        figureViews.add(new FigureView(1L, "CIRCLE", "user", LocalDateTime.now(), LocalDateTime.now(), "user", 314.15, 62.83, 10.0, null, null, null));
+        Page<FigureView> expectedPage = new PageImpl<>(figureViews);
+        Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
+
+        when(figureViewRepository.findAll(predicate, pageable)).thenReturn(expectedPage);
+
+        assertAll(
+                () -> assertThat(figureService.searchFigures(criteria, pageable)).isEqualTo(expectedPage),
+                () -> verify(figureViewRepository).findAll(predicate, pageable)
+        );
     }
 
     // isValidType()
