@@ -50,8 +50,6 @@ class FigureControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private FigureFactory factory;
     private User user;
 
     //    @Before
