@@ -131,6 +131,7 @@ class FigureControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.[0].id").value(1));
+                .andExpect(jsonPath("$.content.[0].id").value(1))
+                .andExpect(jsonPath("$.content.[1].id").value(2));
     }
 }

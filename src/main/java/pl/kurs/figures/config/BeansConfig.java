@@ -26,7 +26,6 @@ import pl.kurs.figures.security.service.UserService;
 public class BeansConfig {
     private final UserService userService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
