@@ -21,7 +21,6 @@ import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.security.model.Role;
 import pl.kurs.figures.security.model.User;
 import pl.kurs.figures.security.repository.UserRepository;
-import pl.kurs.figures.service.FigureFactory;
 
 import java.util.List;
 
@@ -50,18 +49,7 @@ class FigureControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private FigureFactory factory;
     private User user;
-
-    //    @Before
-//    public void init() {
-//        testFigure = new Square();
-//        testFigure.setType("SQUARE");
-//        testFigure.setId(1L);
-//        testFigure.setCreatedBy("user");
-//        repository.save(testFigure);
-//    }
     @BeforeEach
     public void setup() {
         user = setupUser();
@@ -127,11 +115,17 @@ class FigureControllerTest {
     void shouldFindFiguresCreatedByUser() throws Exception {
         this.postman.perform(get("/api/v1/shapes")
                         .with(user(user))
-//                        .param("createdBy","user")
+                        .param("createdBy","user")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.[0].id").value(1))
-                .andExpect(jsonPath("$.content.[1].id").value(2));
+                .andExpect(jsonPath("$.content.[0].createdBy").value("user"))
+                .andExpect(jsonPath("$.content.[0].type").value("CIRCLE"))
+                .andExpect(jsonPath("$.content.[1].id").value(2))
+                .andExpect(jsonPath("$.content.[1].createdBy").value("user"))
+                .andExpect(jsonPath("$.content.[1].type").value("SQUARE"))
+                .andExpect(jsonPath("$.content.length()").value(10))
+  
     }
 }
