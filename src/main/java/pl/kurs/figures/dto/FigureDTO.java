@@ -26,8 +26,4 @@ public abstract class FigureDTO {
     private String lastModifiedBy;
     private double area;
     private double perimeter;
-
-    public FigureDTO(String type) {
-        this.type = type;
-    }
 }

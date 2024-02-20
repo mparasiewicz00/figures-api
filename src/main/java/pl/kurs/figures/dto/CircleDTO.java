@@ -10,8 +10,4 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CircleDTO extends FigureDTO {
     private double radius;
-    public CircleDTO(String type, double radius) {
-        super(type);
-        this.radius = radius;
-    }
 }
