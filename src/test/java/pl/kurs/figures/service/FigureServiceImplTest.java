@@ -73,9 +73,7 @@ class FigureServiceImplTest {
     void createFigure_WithNullableType_ShouldThrowException() {
         CreateFigureCommand command = new CreateFigureCommand(null, List.of(5.0));
 
-        Exception exception = assertThrows(InvalidFigureParametersException.class, () -> {
-            figureService.createFigure(command);
-        });
+        Exception exception = assertThrows(InvalidFigureParametersException.class, () -> figureService.createFigure(command));
 
         assertEquals("Type cannot be null", exception.getMessage());
     }
@@ -84,9 +82,7 @@ class FigureServiceImplTest {
     void createFigure_WithNullableParametersCount_ShouldThrowException() {
         CreateFigureCommand command = new CreateFigureCommand("CIRCLE", null);
 
-        Exception exception = assertThrows(InvalidFigureParametersException.class, () -> {
-            figureService.createFigure(command);
-        });
+        Exception exception = assertThrows(InvalidFigureParametersException.class, () -> figureService.createFigure(command));
 
         assertEquals("Parameters cannot be null", exception.getMessage());
     }
