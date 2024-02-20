@@ -1,6 +1,5 @@
 package pl.kurs.figures.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
@@ -12,17 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
 import pl.kurs.figures.dto.FigureDTO;
-import pl.kurs.figures.service.FigureService;
 import pl.kurs.figures.model.FigureView;
-
-import java.util.List;
+import pl.kurs.figures.service.FigureService;
 
 @RestController
 @RequestMapping("/api/v1/shapes")
 @AllArgsConstructor
 public class FigureController {
-    private FigureService figureService;
 
+    private FigureService figureService;
 
     @PostMapping()
     @Operation(summary = "Add new figure")
