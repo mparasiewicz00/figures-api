@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pl.kurs.figures.security.model.User;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -33,6 +34,11 @@ public abstract class Figure implements FigureInterface, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 
     @Column(name = "type", updatable = false, insertable = false)
     private String type;

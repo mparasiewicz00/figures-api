@@ -101,4 +101,13 @@
     </createView>
     </changeSet>
 
+    <changeSet id="1707403054540-1" author="mateuszparasiewicz">
+        <addColumn tableName="figure">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true" referencedTableName="users" referencedColumnNames="id" foreignKeyName="fk_figure_user"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
 </databaseChangeLog>
