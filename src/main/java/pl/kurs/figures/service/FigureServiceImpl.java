@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
@@ -13,6 +16,7 @@ import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.dto.RectangleDTO;
 import pl.kurs.figures.dto.SquareDTO;
+import pl.kurs.figures.exceptions.FigureNotFoundException;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
 import pl.kurs.figures.model.Circle;
 import pl.kurs.figures.model.Figure;
@@ -21,9 +25,12 @@ import pl.kurs.figures.model.Square;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
 import pl.kurs.figures.model.FigureView;
+import pl.kurs.figures.security.model.User;
+import pl.kurs.figures.security.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +40,7 @@ public class FigureServiceImpl implements FigureService {
     private final ModelMapper modelMapper;
     private final FigureFactory figureFactory;
     private final FigureViewRepository figureViewRepository;
+    private final UserRepository userRepository;
 
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
@@ -43,6 +51,7 @@ public class FigureServiceImpl implements FigureService {
         List<Double> parameters = Optional.ofNullable(command.getParameters())
                 .orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
 
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (!isValidType(type)) {
             throw new InvalidFigureParametersException("Unsupported figure type: " + type);
@@ -56,8 +65,16 @@ public class FigureServiceImpl implements FigureService {
             throw new InvalidFigureParametersException("Invalid number of parameters for type: " + type);
         }
 
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
         Figure figure = figureFactory.createFigure(type, parameters);
+        figure.setUser(user);
         figureRepository.save(figure);
+
+        //Adding figure to List of user figures
+        user.addFigure(figure);
+        userRepository.save(user);
 
         return mapToDTO(figure);
     }
@@ -66,6 +83,26 @@ public class FigureServiceImpl implements FigureService {
     public Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable) {
         Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
         return figureViewRepository.findAll(predicate, pageable);
+    }
+
+    public List<FigureDTO> getFiguresCreatedByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return user.getFigures().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public FigureDTO getFigure(Long figureId, String username) {
+        Figure figure = figureRepository.findById(figureId)
+                .orElseThrow(() -> new FigureNotFoundException("Figure not found"));
+
+        if (!figure.getUser().getUsername().equals(username)) {
+            throw new AccessDeniedException("You do not have permission to access this figure");
+        }
+
+        return mapToDTO(figure);
     }
 
 

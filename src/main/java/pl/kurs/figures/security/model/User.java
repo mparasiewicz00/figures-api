@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.kurs.figures.model.Figure;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -30,13 +31,24 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Figure> figures;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Figure> figures = new ArrayList<>();
 
     public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public void addFigure(Figure figure) {
+        figures.add(figure);
+        figure.setUser(this);
+    }
+
+    public void removeFigure(Figure figure) {
+        figures.remove(figure);
+        figure.setUser(null);
     }
 
     @Override

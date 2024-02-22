@@ -38,4 +38,5 @@ public class FigureController {
         return ResponseEntity.ok(
                 figureService.searchFigures(criteria, PageRequest.of(page, size)));
     }
+
 }
