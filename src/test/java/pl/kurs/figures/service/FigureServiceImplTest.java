@@ -22,6 +22,7 @@ import pl.kurs.figures.model.FigureView;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

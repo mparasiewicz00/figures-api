@@ -67,7 +67,7 @@
         <renameTable oldTableName="user" newTableName="users"></renameTable>
     </changeSet>
 
-    <changeSet id="1707403054539-2" author="mateuszparasiewicz">
+    <changeSet id="1707403054539-3" author="mateuszparasiewicz">
     <createView encoding="UTF-8"
                 fullDefinition="false"
                 remarks="A String"
@@ -101,6 +101,7 @@
     </createView>
     </changeSet>
 
+
     <changeSet id="1707403054540-1" author="mateuszparasiewicz">
         <addColumn tableName="figure">
             <column name="user_id" type="BIGINT">
@@ -109,5 +110,39 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1707403054540-2" author="mateuszparasiewicz" runOnChange="true">
+        <createView encoding="UTF-8"
+                    fullDefinition="false"
+                    remarks="A String"
+                    replaceIfExists="true"
+                    schemaName="figures"
+                    viewName="figure_view">
+            SELECT
+                f.id AS id,
+                f.type AS type,
+                u.username AS createdBy,
+                f.created_at AS createdAt,
+                f.last_modified_at AS lastModifiedAt,
+                f.last_modified_by AS lastModifiedBy,
+                f.radius AS radius,
+                f.side_length AS sideLength,
+                f.first_side_length AS firstSideLength,
+                f.second_side_length AS secondSideLength,
+                (CASE
+                     WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
+                     WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
+                     WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
+                     ELSE 0
+                    END) AS area,
+                (CASE
+                     WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
+                     WHEN f.type = 'SQUARE' THEN 4 * f.side_length
+                     WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
+                     ELSE 0
+                    END) AS perimeter
+            FROM figure f
+                     JOIN users u ON f.user_id = u.id;
+        </createView>
+    </changeSet>
 
 </databaseChangeLog>

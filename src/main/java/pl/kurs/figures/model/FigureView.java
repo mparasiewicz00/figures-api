@@ -1,24 +1,24 @@
 package pl.kurs.figures.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
+import pl.kurs.figures.security.model.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Immutable
 @Table(name = "figure_view")
-@NoArgsConstructor
 public class FigureView {
 
     @Id
