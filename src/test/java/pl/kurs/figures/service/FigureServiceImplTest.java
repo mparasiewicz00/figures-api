@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
 import pl.kurs.figures.dto.CircleDTO;
@@ -51,6 +52,7 @@ class FigureServiceImplTest {
 
     // createFigure()
     @Test
+    @WithMockUser(username = "user")
     void createFigure_ShouldReturnFigureDTOWhenCorrectParametersPassed() {
         CreateFigureCommand command = new CreateFigureCommand("CIRCLE", List.of(5.0));
         Circle circle = new Circle(5.0);
@@ -122,6 +124,7 @@ class FigureServiceImplTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     void isValidType_shouldThrowExceptionWhenTypeIsNotValid() {
         CreateFigureCommand command = new CreateFigureCommand("UNKNOWN", List.of(1.0));
 

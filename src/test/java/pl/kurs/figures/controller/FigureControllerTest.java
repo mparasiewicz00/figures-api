@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -67,11 +68,11 @@ class FigureControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     void shouldAddCircle() throws Exception {
         List<Double> parameters = List.of(5.0);
         CreateFigureCommand command = new CreateFigureCommand("CIRCLE", parameters);
         postman.perform(post("/api/v1/shapes")
-                        .with(user(setupUser()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(command)))
@@ -82,11 +83,11 @@ class FigureControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     void shouldAddSquare() throws Exception {
         List<Double> parameters = List.of(10.0);
         CreateFigureCommand command = new CreateFigureCommand("SQUARE", parameters);
         postman.perform(post("/api/v1/shapes")
-                        .with(user(setupUser()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(command)))
@@ -97,11 +98,11 @@ class FigureControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     void shouldAddRectangle() throws Exception {
         List<Double> parameters = List.of(10.0, 20.0);
         CreateFigureCommand command = new CreateFigureCommand("RECTANGLE", parameters);
         postman.perform(post("/api/v1/shapes")
-                        .with(user(setupUser()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(command)))
@@ -128,4 +129,5 @@ class FigureControllerTest {
                 .andExpect(jsonPath("$.content.length()").value(10));
   
     }
+
 }

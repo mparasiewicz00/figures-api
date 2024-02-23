@@ -85,6 +85,7 @@ public class FigureServiceImpl implements FigureService {
         return figureViewRepository.findAll(predicate, pageable);
     }
 
+    @Override
     public List<FigureDTO> getFiguresCreatedByUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -94,6 +95,17 @@ public class FigureServiceImpl implements FigureService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public Page<FigureDTO> getFiguresCreatedByUserPage(String username, Pageable pageable) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Page<Figure> figures = figureRepository.findByUser(user, pageable);
+        return figures.map(this::mapToDTO);
+    }
+
+    @Override
     public FigureDTO getFigure(Long figureId, String username) {
         Figure figure = figureRepository.findById(figureId)
                 .orElseThrow(() -> new FigureNotFoundException("Figure not found"));
