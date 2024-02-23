@@ -14,6 +14,13 @@ import java.util.List;
 public interface FigureService {
     FigureDTO createFigure(CreateFigureCommand command);
     Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable);
+
+    List<FigureDTO> getFiguresCreatedByUser(String username);
+
+    Page<FigureDTO> getFiguresCreatedByUserPage(String username, Pageable pageable);
+
+    FigureDTO getFigure(Long figureId, String username);
+
     boolean areParametersValid(List<Double> parameters);
     boolean areParametersCountValid(String type, List<Double> parameters);
     boolean isValidType(String type);

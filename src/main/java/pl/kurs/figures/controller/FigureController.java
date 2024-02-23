@@ -39,4 +39,17 @@ public class FigureController {
                 figureService.searchFigures(criteria, PageRequest.of(page, size)));
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "Search all user figures")
+    public ResponseEntity<Page<FigureDTO>> searchAllUserFigures (String user,
+                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(
+                figureService.getFiguresCreatedByUserPage(user, PageRequest.of(page, size)));
+    }
+
+
+
+
+
 }

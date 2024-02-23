@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import pl.kurs.figures.exceptions.FigureNotFoundException;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
 import pl.kurs.figures.exceptions.ShapeNotExistException;
 
@@ -43,4 +44,16 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(FigureNotFoundException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleFigureNotFoundException(FigureNotFoundException e) {
+        ExceptionResponseDTO response = new ExceptionResponseDTO(
+                List.of(e.getMessage()),
+                "NOT_FOUND",
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+
 }
