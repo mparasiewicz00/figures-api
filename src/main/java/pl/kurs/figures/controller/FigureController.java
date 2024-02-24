@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
@@ -36,20 +38,8 @@ public class FigureController {
                                                           @RequestParam(value = "page", defaultValue = "0") int page,
                                                           @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(
-                figureService.searchFigures(criteria, PageRequest.of(page, size)));
+                figureService.getFiguresCreatedByUserPage(criteria, PageRequest.of(page, size)));
     }
-
-    @GetMapping("/all")
-    @Operation(summary = "Search all user figures")
-    public ResponseEntity<Page<FigureDTO>> searchAllUserFigures (String user,
-                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
-        return ResponseEntity.ok(
-                figureService.getFiguresCreatedByUserPage(user, PageRequest.of(page, size)));
-    }
-
-
-
 
 
 }
