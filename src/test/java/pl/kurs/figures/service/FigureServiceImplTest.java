@@ -93,20 +93,21 @@ class FigureServiceImplTest {
 
     //searchFigures
     @Test
+    @WithMockUser(username = "ADMIN")
     void shouldSearchFiguresBasedOnCriteria() {
         FigureSearchCriteria criteria = new FigureSearchCriteria();
         criteria.setCreatedBy("user");
         Pageable pageable = PageRequest.of(0, 10);
 
         List<FigureView> figureViews = new ArrayList<>();
-        figureViews.add(new FigureView(1L, "CIRCLE", "user", LocalDateTime.now(), LocalDateTime.now(), "user", 314.15, 62.83, 10.0, null, null, null));
+        figureViews.add(new FigureView(1L, "CIRCLE", "admin", LocalDateTime.now(), LocalDateTime.now(), "user", 314.15, 62.83, 10.0, null, null, null));
         Page<FigureView> expectedPage = new PageImpl<>(figureViews);
         Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
 
         when(figureViewRepository.findAll(predicate, pageable)).thenReturn(expectedPage);
 
         assertAll(
-                () -> assertThat(figureService.searchFigures(criteria, pageable)).isEqualTo(expectedPage),
+                () -> assertThat(figureService.getFiguresCreatedByUserPage(criteria, pageable)).isEqualTo(expectedPage),
                 () -> verify(figureViewRepository).findAll(predicate, pageable)
         );
     }

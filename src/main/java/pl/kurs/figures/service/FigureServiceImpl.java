@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,21 +16,15 @@ import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.dto.RectangleDTO;
 import pl.kurs.figures.dto.SquareDTO;
-import pl.kurs.figures.exceptions.FigureNotFoundException;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
-import pl.kurs.figures.model.Circle;
-import pl.kurs.figures.model.Figure;
-import pl.kurs.figures.model.Rectangle;
-import pl.kurs.figures.model.Square;
+import pl.kurs.figures.model.*;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
-import pl.kurs.figures.model.FigureView;
 import pl.kurs.figures.security.model.User;
 import pl.kurs.figures.security.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -80,43 +74,24 @@ public class FigureServiceImpl implements FigureService {
     }
 
     @Override
-    public Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable) {
-        Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
+    public Page<FigureView> getFiguresCreatedByUserPage(FigureSearchCriteria criteria, Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            return searchFigures(criteria, pageable);
+        } else if (authentication != null && authentication.getAuthorities()
+                .stream().anyMatch(a -> a.getAuthority().equals("USER"))) {
+            criteria.setCreatedBy(authentication.getName());
+            return searchFigures(criteria, pageable);
+        }
+        else return Page.empty();
+    }
+
+    private Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable) {
+        Predicate predicate = FigureViewQueryCreator
+                .createPredicate(criteria);
         return figureViewRepository.findAll(predicate, pageable);
     }
-
-    @Override
-    public List<FigureDTO> getFiguresCreatedByUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return user.getFigures().stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
-    }
-
-
-    @Override
-    public Page<FigureDTO> getFiguresCreatedByUserPage(String username, Pageable pageable) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        Page<Figure> figures = figureRepository.findByUser(user, pageable);
-        return figures.map(this::mapToDTO);
-    }
-
-    @Override
-    public FigureDTO getFigure(Long figureId, String username) {
-        Figure figure = figureRepository.findById(figureId)
-                .orElseThrow(() -> new FigureNotFoundException("Figure not found"));
-
-        if (!figure.getUser().getUsername().equals(username)) {
-            throw new AccessDeniedException("You do not have permission to access this figure");
-        }
-
-        return mapToDTO(figure);
-    }
-
 
     @Override
     public boolean areParametersValid(List<Double> parameters) {
@@ -136,6 +111,7 @@ public class FigureServiceImpl implements FigureService {
     public boolean isValidType(String type) {
         return List.of("RECTANGLE", "SQUARE", "CIRCLE").contains(type.toUpperCase());
     }
+
 
     private FigureDTO mapToDTO(Figure figure) {
         return switch (figure.getType().toUpperCase()) {
