@@ -1,6 +1,5 @@
 package pl.kurs.figures.service;
 
-
 import com.querydsl.core.types.Predicate;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -156,10 +155,5 @@ public class FigureServiceImpl implements FigureService {
         dto.setPerimeter(square.calculatePerimeter());
         return dto;
     }
-
-
-
-
-
 }
 
