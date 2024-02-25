@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum Role {
-    USER("user"),
-    ADMIN("admin");
+    USER("USER"),
+    ADMIN("ADMIN");
 
     private final String label;
 
@@ -15,6 +15,6 @@ public enum Role {
                 return e;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Unknown label: " + label);
     }
 }

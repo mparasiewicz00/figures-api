@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import pl.kurs.figures.exceptions.InvalidFigureParametersException;
 import pl.kurs.figures.model.*;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
+import pl.kurs.figures.security.model.Role;
 import pl.kurs.figures.security.model.User;
 import pl.kurs.figures.security.repository.UserRepository;
 
@@ -75,12 +77,11 @@ public class FigureServiceImpl implements FigureService {
 
     @Override
     public Page<FigureView> getFiguresCreatedByUserPage(FigureSearchCriteria criteria, Pageable pageable) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getAuthorities()
-                .stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+        Role role = getLoggedUserRole();
+        if (role == Role.ADMIN) {
             return searchFigures(criteria, pageable);
-        } else if (authentication != null && authentication.getAuthorities()
-                .stream().anyMatch(a -> a.getAuthority().equals("USER"))) {
+        } else if (role == Role.USER) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             criteria.setCreatedBy(authentication.getName());
             return searchFigures(criteria, pageable);
         }
@@ -93,6 +94,14 @@ public class FigureServiceImpl implements FigureService {
         return figureViewRepository.findAll(predicate, pageable);
     }
 
+    private Role getLoggedUserRole() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .flatMap(authentication -> authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .map(Role::toRole)
+                        .findFirst())
+                .orElseThrow(() -> new UsernameNotFoundException("User role not found"));
+    }
     @Override
     public boolean areParametersValid(List<Double> parameters) {
         return parameters.stream().noneMatch(parameter -> parameter == null || parameter <= 0.0);
