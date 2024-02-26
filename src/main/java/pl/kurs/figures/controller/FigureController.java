@@ -40,6 +40,4 @@ public class FigureController {
         return ResponseEntity.ok(
                 figureService.getFiguresCreatedByUserPage(criteria, PageRequest.of(page, size)));
     }
-
-
 }

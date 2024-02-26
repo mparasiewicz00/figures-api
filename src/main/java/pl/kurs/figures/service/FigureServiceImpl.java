@@ -40,11 +40,9 @@ public class FigureServiceImpl implements FigureService {
     @Override
     public FigureDTO createFigure(CreateFigureCommand command) {
 
-        String type = String.valueOf(Optional.ofNullable(command.getType())
-                .orElseThrow(() -> new InvalidFigureParametersException("Type cannot be null")));
+        String type = String.valueOf(Optional.ofNullable(command.getType()).orElseThrow(() -> new InvalidFigureParametersException("Type cannot be null")));
 
-        List<Double> parameters = Optional.ofNullable(command.getParameters())
-                .orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
+        List<Double> parameters = Optional.ofNullable(command.getParameters()).orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -80,27 +78,29 @@ public class FigureServiceImpl implements FigureService {
         if (role == Role.ADMIN) {
             return searchFigures(criteria, pageable);
         } else if (role == Role.USER) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Authentication authentication = SecurityContextHolder
+                    .getContext()
+                    .getAuthentication();
+
             criteria.setCreatedBy(authentication.getName());
             return searchFigures(criteria, pageable);
-        }
-        else return Page.empty();
+        } else return Page.empty();
     }
 
     private Page<FigureView> searchFigures(FigureSearchCriteria criteria, Pageable pageable) {
-        Predicate predicate = FigureViewQueryCreator
-                .createPredicate(criteria);
+        Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
         return figureViewRepository.findAll(predicate, pageable);
     }
 
     private Role getLoggedUserRole() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+        return Optional.ofNullable(SecurityContextHolder.getContext()
+                .getAuthentication())
                 .flatMap(authentication -> authentication.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .map(Role::toRole)
-                        .findFirst())
+                .map(GrantedAuthority::getAuthority).map(Role::toRole)
+                .findFirst())
                 .orElseThrow(() -> new UsernameNotFoundException("User role not found"));
     }
+
     @Override
     public boolean areParametersValid(List<Double> parameters) {
         return parameters.stream().noneMatch(parameter -> parameter == null || parameter <= 0.0);
