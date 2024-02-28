@@ -12,11 +12,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
+import pl.kurs.figures.command.ModifyFigureCommand;
 import pl.kurs.figures.dto.CircleDTO;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.dto.RectangleDTO;
 import pl.kurs.figures.dto.SquareDTO;
+import pl.kurs.figures.exceptions.FigureNotFoundException;
 import pl.kurs.figures.exceptions.InvalidFigureParametersException;
+import pl.kurs.figures.exceptions.PermissionDeniedException;
 import pl.kurs.figures.model.*;
 import pl.kurs.figures.repository.FigureRepository;
 import pl.kurs.figures.repository.FigureViewRepository;
@@ -70,6 +73,51 @@ public class FigureServiceImpl implements FigureService {
         userRepository.save(user);
 
         return mapToDTO(figure);
+    }
+
+    @Override
+    public FigureDTO modifyFigure(ModifyFigureCommand command) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Role role = getLoggedUserRole();
+
+        Long id = Optional.ofNullable(command.getId())
+                .filter(x -> x > 0)
+                .orElseThrow(() -> new InvalidFigureParametersException("Invalid id provided"));
+
+        List<Double> parameters = Optional.ofNullable(command.getParameters())
+                .orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
+
+        // verification if parameters are greater than 0
+        areParametersValid(command.getParameters());
+
+        Figure figure = figureRepository.findById(id)
+                .orElseThrow(() -> new FigureNotFoundException("Figure with id " + id + " not found"));
+
+        // verification if parameters count are correct to figure type
+        areParametersCountValid(figure.getType(), parameters);
+
+        if (role == Role.ADMIN || figure.getUser().getUsername().equals(username)) {
+            updateFigureParameters(figure, parameters);
+            figureRepository.save(figure);
+        } else {
+            throw new PermissionDeniedException("You do not have permission to modify this figure");
+        }
+
+        return mapToDTO(figure);
+    }
+
+    private void updateFigureParameters(Figure figure, List<Double> parameters) {
+
+        if(figure instanceof Circle) {
+            ((Circle) figure).setRadius(parameters.get(0));
+        } else if (figure instanceof Square) {
+            ((Square) figure).setSideLength(parameters.get(0));
+        } else if (figure instanceof Rectangle) {
+            ((Rectangle) figure).setFirstSideLength(parameters.get(0));
+            ((Rectangle) figure).setSecondSideLength(parameters.get(1));
+        } else {
+            throw new InvalidFigureParametersException("Type not found");
+        }
     }
 
     @Override

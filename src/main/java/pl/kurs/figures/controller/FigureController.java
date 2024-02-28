@@ -5,13 +5,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
+import pl.kurs.figures.command.ModifyFigureCommand;
 import pl.kurs.figures.dto.FigureDTO;
 import pl.kurs.figures.model.FigureView;
 import pl.kurs.figures.service.FigureService;
@@ -32,6 +31,18 @@ public class FigureController {
                 .body(figureService.createFigure(command));
     }
 
+    @PostMapping("/modify")
+    @Operation(summary = "Modify figure by id")
+    @ApiResponse(responseCode = "200", description = "Figure modified successfully and returned in response body")
+    @ApiResponse(responseCode = "304", description = "Permission denied")
+    @ApiResponse(responseCode = "400", description = "Invalid request parameters")
+    @ApiResponse(responseCode = "404", description = "Figure not found")
+    @ApiResponse(responseCode = "500", description = "There is a problem in modifying figure")
+    public ResponseEntity<FigureDTO> modifyFigure(@RequestBody ModifyFigureCommand command) {
+        return ResponseEntity.ok()
+                .body(figureService.modifyFigure(command));
+    }
+
     @GetMapping
     @Operation(summary = "Search by criteria")
     public ResponseEntity<Page<FigureView>> searchFigures(FigureSearchCriteria criteria,
@@ -40,4 +51,6 @@ public class FigureController {
         return ResponseEntity.ok(
                 figureService.getFiguresCreatedByUserPage(criteria, PageRequest.of(page, size)));
     }
+
+
 }
