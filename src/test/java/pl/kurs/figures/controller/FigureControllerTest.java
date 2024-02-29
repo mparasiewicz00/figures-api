@@ -113,6 +113,7 @@ class FigureControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user")
     void shouldFindFiguresCreatedByUser() throws Exception {
         this.postman.perform(get("/api/v1/shapes")
                         .with(user(user))
