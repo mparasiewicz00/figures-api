@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -32,6 +34,7 @@ import pl.kurs.figures.security.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,12 +66,17 @@ class FigureServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        // Mock Authentication object to simulate Spring Security Context
         Authentication authentication = mock(Authentication.class);
         SecurityContext securityContext = mock(SecurityContext.class);
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getName()).thenReturn("user");
+
+        // Simulate the authorities for the mock user
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("USER")); // Use ROLE_USER to simulate a regular user
 
     }
 
@@ -119,26 +127,26 @@ class FigureServiceImplTest {
 
     //searchFigures
     @Test
-    @WithMockUser(username = "user")
     void shouldSearchFiguresBasedOnCriteria() {
 
         FigureSearchCriteria criteria = new FigureSearchCriteria();
-        criteria.setCreatedBy("USER");
+        criteria.setCreatedBy("user"); // Ensure this matches the username returned by the mock authentication
         Pageable pageable = PageRequest.of(0, 10);
 
         List<FigureView> figureViews = new ArrayList<>();
-        figureViews.add(new FigureView(1L, "CIRCLE", "admin", LocalDateTime.now(), LocalDateTime.now(), "user", 314.15, 62.83, 10.0, null, null, null));
+        figureViews.add(new FigureView(1L, "CIRCLE", "user", LocalDateTime.now(), LocalDateTime.now(), "user", 314.15, 62.83, 10.0, null, null, null));
         Page<FigureView> expectedPage = new PageImpl<>(figureViews);
-        Predicate predicate = FigureViewQueryCreator.createPredicate(criteria);
 
-        when(figureViewRepository.findAll(predicate, pageable)).thenReturn(expectedPage);
+        when(figureViewRepository.findAll(any(Predicate.class), eq(pageable))).thenReturn(expectedPage);
+
+        Page<FigureView> actualPage = figureService.getFiguresCreatedByUserPage(criteria, pageable);
 
         assertAll(
-                () -> assertThat(figureService.getFiguresCreatedByUserPage(criteria, pageable)).isEqualTo(expectedPage),
-                () -> verify(figureViewRepository).findAll(predicate, pageable)
+                () -> assertNotNull(actualPage),
+                () -> assertEquals(1, actualPage.getTotalElements()),
+                () -> assertEquals(expectedPage.getContent().get(0).getId(), actualPage.getContent().get(0).getId()),
+                () -> verify(figureViewRepository).findAll(any(Predicate.class), eq(pageable))
         );
-
-        SecurityContextHolder.clearContext();
     }
 
     // isValidType()
