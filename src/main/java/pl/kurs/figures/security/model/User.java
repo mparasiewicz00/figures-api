@@ -2,7 +2,6 @@ package pl.kurs.figures.security.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Formula;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +30,6 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private Integer figuresNumber;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
@@ -46,13 +44,11 @@ public class User implements UserDetails {
     public void addFigure(Figure figure) {
         figures.add(figure);
         figure.setUser(this);
-        this.figuresNumber = (this.figuresNumber == null ? 0 : this.figuresNumber) + 1;
     }
 
     public void removeFigure(Figure figure) {
         figures.remove(figure);
         figure.setUser(null);
-        this.figuresNumber = (this.figuresNumber == null ? 0 : this.figuresNumber) - 1;
     }
 
     @Override
