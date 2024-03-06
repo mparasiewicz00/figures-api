@@ -19,4 +19,5 @@ public interface FigureService {
     boolean areParametersCountValid(String type, List<Double> parameters);
     boolean isValidType(String type);
     FigureDTO modifyFigure(ModifyFigureCommand command);
+    void deleteFigure(Long id);
 }

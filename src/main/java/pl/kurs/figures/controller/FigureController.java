@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.kurs.figures.command.CreateFigureCommand;
 import pl.kurs.figures.command.FigureSearchCriteria;
@@ -33,6 +34,7 @@ public class FigureController {
 
     @PostMapping("/modify")
     @Operation(summary = "Modify figure by id")
+    @ApiResponse(responseCode = "304", description = "Non modified, may do not have access")
     @ApiResponse(responseCode = "200", description = "Figure modified successfully and returned in response body")
     @ApiResponse(responseCode = "304", description = "Permission denied")
     @ApiResponse(responseCode = "400", description = "Invalid request parameters")
@@ -41,6 +43,16 @@ public class FigureController {
     public ResponseEntity<FigureDTO> modifyFigure(@RequestBody ModifyFigureCommand command) {
         return ResponseEntity.ok()
                 .body(figureService.modifyFigure(command));
+    }
+
+
+    // Only admin can delete figures
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Operation(summary = "Delete figure by id")
+    public ResponseEntity<Void> deleteFigure(@PathVariable("id") Long id) {
+        figureService.deleteFigure(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

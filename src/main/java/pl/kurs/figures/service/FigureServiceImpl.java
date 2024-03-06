@@ -125,6 +125,18 @@ public class FigureServiceImpl implements FigureService {
     }
 
     @Override
+    public void deleteFigure(Long id) {
+        Optional.ofNullable(id)
+                .filter(x -> x > 0)
+                .orElseThrow(() -> new FigureNotFoundException("Invalid id provided"));
+
+        Figure figureForDelete = modelMapper.map(figureRepository.findById(id), Figure.class);
+        figureRepository.delete(figureForDelete);
+    }
+
+
+
+    @Override
     public Page<FigureView> getFiguresCreatedByUserPage(FigureSearchCriteria criteria, Pageable pageable) {
         Role role = getLoggedUserRole();
         if (role == Role.ADMIN) {
