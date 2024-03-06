@@ -59,6 +59,7 @@ class FigureControllerTest {
                 .build();
     }
 
+
     public User setupUser() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         Role userRole = Role.USER;

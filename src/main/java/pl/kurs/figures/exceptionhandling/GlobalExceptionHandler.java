@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import pl.kurs.figures.exceptions.*;
+import pl.kurs.figures.exceptions.FigureNotFoundException;
+import pl.kurs.figures.exceptions.InvalidFigureParametersException;
+import pl.kurs.figures.exceptions.PermissionDeniedException;
+import pl.kurs.figures.exceptions.ShapeNotExistException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,16 +64,6 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(response);
-    }
-
-    @ExceptionHandler(EmptyTableException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleEmptyTableException(EmptyTableException e) {
-        ExceptionResponseDTO response = new ExceptionResponseDTO(
-                List.of(e.getMessage()),
-                "NOT_FOUND",
-                LocalDateTime.now()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
 

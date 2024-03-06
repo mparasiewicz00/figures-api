@@ -88,17 +88,13 @@ public class FigureServiceImpl implements FigureService {
                 .orElseThrow(() -> new InvalidFigureParametersException("Parameters cannot be null"));
 
         // verification if parameters are greater than 0
-        if (!areParametersValid(parameters)) {
-            throw new InvalidFigureParametersException("Parameters must be greater than 0 and not null");
-        }
+        areParametersValid(command.getParameters());
 
         Figure figure = figureRepository.findById(id)
                 .orElseThrow(() -> new FigureNotFoundException("Figure with id " + id + " not found"));
 
         // verification if parameters count are correct to figure type
-        if (!areParametersCountValid(figure.getType(), parameters)) {
-            throw new InvalidFigureParametersException("Invalid number of parameters for type: " + figure.getType());
-        }
+        areParametersCountValid(figure.getType(), parameters);
 
         if (role == Role.ADMIN || figure.getUser().getUsername().equals(username)) {
             updateFigureParameters(figure, parameters);
