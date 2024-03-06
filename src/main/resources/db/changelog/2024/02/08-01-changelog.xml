@@ -145,4 +145,10 @@
         </createView>
     </changeSet>
 
+    <changeSet id="1707403054540-3" author="mateuszparasiewicz">
+        <addColumn tableName="users">
+            <column name="figures_number" type="INT"></column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
