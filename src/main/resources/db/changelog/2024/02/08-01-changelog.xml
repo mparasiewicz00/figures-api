@@ -46,20 +46,20 @@
     </changeSet>
 
     <changeSet id="1707403054538-6" author="mateuszparasiewicz">
-       <createTable tableName="user">
-           <column name="id" type="BIGINT">
-               <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
-           </column>
-           <column name="username" type="VARCHAR(1024)">
-               <constraints nullable="false"/>
-           </column>
-           <column name="password" type="VARCHAR(255)">
-               <constraints nullable="false"/>
-           </column>
-           <column name="role" type="VARCHAR(64)">
-               <constraints nullable="false"/>
-           </column>
-       </createTable>
+        <createTable tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
+            </column>
+            <column name="username" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
     </changeSet>
 
@@ -68,44 +68,44 @@
     </changeSet>
 
     <changeSet id="1707403054539-3" author="mateuszparasiewicz">
-    <createView encoding="UTF-8"
-                fullDefinition="false"
-                remarks="A String"
-                replaceIfExists="true"
-                schemaName="figures"
-                viewName="figure_view">
-        SELECT
-        f.id as id,
-        f.type as type,
-        f.created_by as created_by,
-        f.created_at as created_at,
-        f.last_modified_at as last_modified_at,
-        f.last_modified_by as last_modified_by,
-        f.radius as radius,
-        f.side_length as side_length,
-        f.first_side_length as first_side_length,
-        f.second_side_length as second_side_length,
-        (CASE
-        WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
-        WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
-        WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
-        ELSE 0
-        END) AS area,
-        (CASE
-        WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
-        WHEN f.type = 'SQUARE' THEN 4 * f.side_length
-        WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
-        ELSE 0
-        END) AS perimeter
-        from figure f;
-    </createView>
+        <createView encoding="UTF-8"
+                    fullDefinition="false"
+                    remarks="A String"
+                    replaceIfExists="true"
+                    schemaName="figures"
+                    viewName="figure_view">
+            SELECT f.id                 as id,
+                   f.type               as type,
+                   f.created_by         as created_by,
+                   f.created_at         as created_at,
+                   f.last_modified_at   as last_modified_at,
+                   f.last_modified_by   as last_modified_by,
+                   f.radius             as radius,
+                   f.side_length        as side_length,
+                   f.first_side_length  as first_side_length,
+                   f.second_side_length as second_side_length,
+                   (CASE
+                        WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
+                        WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
+                        WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
+                        ELSE 0
+                       END)             AS area,
+                   (CASE
+                        WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
+                        WHEN f.type = 'SQUARE' THEN 4 * f.side_length
+                        WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
+                        ELSE 0
+                       END)             AS perimeter
+            from figure f;
+        </createView>
     </changeSet>
 
 
     <changeSet id="1707403054540-1" author="mateuszparasiewicz">
         <addColumn tableName="figure">
             <column name="user_id" type="BIGINT">
-                <constraints nullable="true" referencedTableName="users" referencedColumnNames="id" foreignKeyName="fk_figure_user"/>
+                <constraints nullable="true" referencedTableName="users" referencedColumnNames="id"
+                             foreignKeyName="fk_figure_user"/>
             </column>
         </addColumn>
     </changeSet>
@@ -117,29 +117,28 @@
                     replaceIfExists="true"
                     schemaName="figures"
                     viewName="figure_view">
-            SELECT
-                f.id AS id,
-                f.type AS type,
-                u.username AS createdBy,
-                f.created_at AS createdAt,
-                f.last_modified_at AS lastModifiedAt,
-                f.last_modified_by AS lastModifiedBy,
-                f.radius AS radius,
-                f.side_length AS sideLength,
-                f.first_side_length AS firstSideLength,
-                f.second_side_length AS secondSideLength,
-                (CASE
-                     WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
-                     WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
-                     WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
-                     ELSE 0
-                    END) AS area,
-                (CASE
-                     WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
-                     WHEN f.type = 'SQUARE' THEN 4 * f.side_length
-                     WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
-                     ELSE 0
-                    END) AS perimeter
+            SELECT f.id                 AS id,
+                   f.type               AS type,
+                   u.username           AS createdBy,
+                   f.created_at         AS createdAt,
+                   f.last_modified_at   AS lastModifiedAt,
+                   f.last_modified_by   AS lastModifiedBy,
+                   f.radius             AS radius,
+                   f.side_length        AS sideLength,
+                   f.first_side_length  AS firstSideLength,
+                   f.second_side_length AS secondSideLength,
+                   (CASE
+                        WHEN f.type = 'CIRCLE' THEN PI() * f.radius * f.radius
+                        WHEN f.type = 'SQUARE' THEN f.side_length * f.side_length
+                        WHEN f.type = 'RECTANGLE' THEN f.first_side_length * f.second_side_length
+                        ELSE 0
+                       END)             AS area,
+                   (CASE
+                        WHEN f.type = 'CIRCLE' THEN 2 * PI() * f.radius
+                        WHEN f.type = 'SQUARE' THEN 4 * f.side_length
+                        WHEN f.type = 'RECTANGLE' THEN 2 * (f.first_side_length + f.second_side_length)
+                        ELSE 0
+                       END)             AS perimeter
             FROM figure f
                      JOIN users u ON f.user_id = u.id;
         </createView>
@@ -150,5 +149,65 @@
             <column name="figures_number" type="INT"></column>
         </addColumn>
     </changeSet>
+    <changeSet id="1710329285201-3" author="mateuszparasiewicz (generated)">
+        <createTable tableName="figure_envers_info">
+            <column name="id" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_envers_info"/>
+            </column>
+            <column name="timestamp" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1710329285201-4" author="mateuszparasiewicz (generated)">
+        <createTable tableName="figure_history">
+            <column name="revision" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_history"/>
+            </column>
+            <column name="revision_type" type="SMALLINT"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_history"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="created_at" type="DATE"/>
+            <column name="last_modified_at" type="DATE"/>
+            <column name="last_modified_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1710329285201-6" author="mateuszparasiewicz (generated)">
+        <createTable tableName="users_history">
+            <column name="revision" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_history"/>
+            </column>
+            <column name="revision_type" type="SMALLINT"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_history"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(255)"/>
+            <column name="figures_number" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1710329285201-7" author="mateuszparasiewicz (generated)">
+        <addForeignKeyConstraint baseColumnNames="revision" baseTableName="figure_history"
+                                 constraintName="FK_FIGURE_HISTORY_ON_REVISION" referencedColumnNames="id"
+                                 referencedTableName="figure_envers_info"/>
+    </changeSet>
+    <changeSet id="1710329285201-8" author="mateuszparasiewicz (generated)">
+        <addForeignKeyConstraint baseColumnNames="revision" baseTableName="users_history"
+                                 constraintName="FK_USERS_HISTORY_ON_REVISION" referencedColumnNames="id"
+                                 referencedTableName="figure_envers_info"/>
+    </changeSet>
+    <changeSet id="1710329285201-1" author="mateuszparasiewicz (generated)">
+        <modifyDataType columnName="type" newDataType="VARCHAR(255)" tableName="figure"/>
+    </changeSet>
+    <changeSet id="1710329285201-2" author="mateuszparasiewicz (generated)">
+        <dropNotNullConstraint columnDataType="varchar(255)" columnName="type" tableName="figure"/>
+    </changeSet>
+
 
 </databaseChangeLog>
