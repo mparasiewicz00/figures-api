@@ -2,6 +2,7 @@ package pl.kurs.figures.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 
 @Entity
+@Audited
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

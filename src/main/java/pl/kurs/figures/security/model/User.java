@@ -3,6 +3,7 @@ package pl.kurs.figures.security.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Formula;
+import org.hibernate.envers.Audited;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
+@Audited
 @Builder
 @Table(name = "users")
 public class User implements UserDetails {

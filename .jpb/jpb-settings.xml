@@ -8,6 +8,7 @@
       </database-info>
     </database-infos>
   </component>
+  <component name="HibernateEnversState" useSpringProperties="true" />
   <component name="PersistenceUnitSettings">
     <persistence-units>
       <persistence-unit name="Default" persistenceXmlPath="src/main/resources/db/changelog/dbchangelog.xml" defaultIncludeChangeLogFile="src/main/resources/db/changelog/dbchangelog.xml">
