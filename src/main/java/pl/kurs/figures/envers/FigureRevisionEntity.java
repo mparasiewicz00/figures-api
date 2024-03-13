@@ -1,13 +1,13 @@
 package pl.kurs.figures.envers;
 
 import com.querydsl.core.annotations.QueryEntities;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
+import org.hibernate.envers.RevisionNumber;
+import org.hibernate.envers.RevisionTimestamp;
 import pl.kurs.figures.security.model.User;
 
 @Getter
@@ -19,4 +19,5 @@ public class FigureRevisionEntity extends DefaultRevisionEntity {
 
     @Column(name = "user")
     private String username;
+
 }

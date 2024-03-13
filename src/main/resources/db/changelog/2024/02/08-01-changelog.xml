@@ -151,7 +151,7 @@
     </changeSet>
     <changeSet id="1710329285201-3" author="mateuszparasiewicz (generated)">
         <createTable tableName="figure_envers_info">
-            <column name="id" type="INT">
+            <column name="id" type="INT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_envers_info"/>
             </column>
             <column name="timestamp" type="BIGINT">
@@ -160,15 +160,13 @@
             <column name="user" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1710329285201-4" author="mateuszparasiewicz (generated)">
+    <changeSet id="1710329285201-120" author="mateuszparasiewicz (generated)">
         <createTable tableName="figure_history">
-            <column name="revision" type="INT">
+            <column name="revision" type="INT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_history"/>
             </column>
             <column name="revision_type" type="SMALLINT"/>
-            <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure_history"/>
-            </column>
+            <column name="id" type="BIGINT"/>
             <column name="user_id" type="BIGINT"/>
             <column name="type" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)"/>
@@ -179,13 +177,11 @@
     </changeSet>
     <changeSet id="1710329285201-6" author="mateuszparasiewicz (generated)">
         <createTable tableName="users_history">
-            <column name="revision" type="INT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_history"/>
+            <column name="revision" type="INT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_history" />
             </column>
             <column name="revision_type" type="SMALLINT"/>
-            <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_history"/>
-            </column>
+            <column name="id" type="BIGINT"/>
             <column name="username" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
             <column name="role" type="VARCHAR(255)"/>
