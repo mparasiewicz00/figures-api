@@ -13,7 +13,7 @@
     </changeSet>
     <changeSet id="1707403054538-3" author="mateuszparasiewicz (generated)">
         <createTable tableName="figure">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figure"/>
             </column>
             <column name="type" type="VARCHAR(255)"/>
@@ -22,18 +22,10 @@
             <column name="created_at" type="DATETIME"/>
             <column name="last_modified_at" type="DATETIME"/>
             <column name="last_modified_by" type="VARCHAR(255)"/>
-            <column name="first_side_length" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="second_side_length" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="radius" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="side_length" type="DOUBLE">
-                <constraints nullable="false"/>
-            </column>
+            <column name="first_side_length" type="DOUBLE"/>
+            <column name="second_side_length" type="DOUBLE"/>
+            <column name="radius" type="DOUBLE"/>
+            <column name="side_length" type="DOUBLE"/>
         </createTable>
     </changeSet>
 
@@ -47,7 +39,7 @@
 
     <changeSet id="1707403054538-6" author="mateuszparasiewicz">
         <createTable tableName="user">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="user_pk"/>
             </column>
             <column name="username" type="VARCHAR(1024)">

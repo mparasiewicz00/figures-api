@@ -15,8 +15,14 @@ import pl.kurs.figures.security.model.User;
 @Entity
 @Table(name = "figure_envers_info")
 @RevisionEntity(FigureRevisionEntityListener.class)
-public class FigureRevisionEntity extends DefaultRevisionEntity {
+public class FigureRevisionEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @RevisionNumber
+    private int id;
+    @RevisionTimestamp
+    private long timestamp;
     @Column(name = "user")
     private String username;
 
